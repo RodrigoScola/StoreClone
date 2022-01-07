@@ -8,6 +8,7 @@ const rateLimit = require("express-rate-limit")
 const { sequelizeSetup } = require("./db")
 const compression = require("compression")
 const User = require("./db/models/User")
+const userRouter = require("./Routers/UserRouter")
 // const User = require("./db/models/User")
 
 require("dotenv").config()
@@ -36,27 +37,17 @@ server.use(
 	})
 )
 
+// routers
+server.use("/user", userRouter)
+
 // limits how much information is sent
 const limiter = rateLimit({
 	windowMs: 1000 * 60 * 5, // 5 minutes
-	max: 100,
-})
-server.use("/", async (req, res, next) => {
-	try {
-		await User.create({
-			firstName: "hane",
-			lastName: "hahah",
-			email: "jane@gmail.com",
-			age: 12,
-		})
-	} catch (err) {
-		console.log(err.message)
-	}
-	res.send("ahaha")
+	max: 10000000,
 })
 
 server.use(limiter)
 server.listen(process.env.PORT, async () => {
 	sequelizeSetup()
-	console.log(`server is listening on port ${process.env.port} \n  http://localhost:${process.env.PORT}/`)
+	console.log(`server is listening on port ${process.env.port} \nhttp://localhost:${process.env.PORT}/`)
 })
