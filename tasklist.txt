@@ -1,0 +1,39 @@
+search engine 
+
+delete account
+
+delete products
+     if the user id == storage user id
+          button appear so you can delete it 
+               alert appear with confirmation
+     delete from the database 
+     delete from firebase storage 
+
+
+payment methods
+     how to test them
+
+comments ?
+
+edit info 
+
+change database
+     user 
+          add 
+          	city
+               country
+               phoneNumber
+               zipCode
+               billingAddress
+     
+add more photos to add to database
+
+add json stuff and make documentation
+
+publish databse and site (change site name on server side and server constructor)
+
+optimize so that dont have unnecessary calls 3 times on the same page 
+
+add what you have learned in the resumo proj 
+
+remove imports that dont matter 

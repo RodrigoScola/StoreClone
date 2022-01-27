@@ -10,14 +10,16 @@ const hashPassword = async password => {
 	return hashed
 }
 /**
- *
+ * @async
+ * @function validatePassword
  * @param {String} userPassword
  * @param {String} hashedPassword
  * @returns Boolean
  */
 const validatePassword = async (userPassword, hashedPassword) => {
-	const isMatch = await bcrypt.compare(userPassword, hashedPassword)
-	return isMatch
+	try {
+		return await bcrypt.compare(userPassword, hashedPassword)
+	} catch (err) {}
 }
 
 module.exports = { hashPassword, validatePassword }

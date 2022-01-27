@@ -1,16 +1,19 @@
 const { User } = require("../db/models/User")
-const { hashPassword } = require("../utils/hashing")
+const { validatePassword } = require("../utils/hashing")
 
-// get all users
+/**
+ * @description gets all users in database
+ * @returns information about all users
+ */
 const getAllUsers = async () => {
 	const users = await User.findAll()
 	return await JSON.stringify(users, null, 2)
 }
-
 /**
- *
- * @param {String} uuid
- * @returns User object
+ * @description gets user in the database by the id
+ * @param {String} uuid - String
+ * @returns User
+ * @async
  */
 // get user by uuid
 const getUser = async uuid => {
@@ -20,40 +23,46 @@ const getUser = async uuid => {
 				id: uuid,
 			},
 		})
-		return await JSON.stringify(user, null, 2)
+		const userInfo = user
+		console.log(userInfo)
+		return userInfo
 	} catch (err) {
 		console.log("")
 	}
 }
+
 /**
  * @function
  * @async
- * @param {String} email - Required
- * @param {*} password
+ * @param {String} email
+ * @param {String} password
  * @returns
  */
 const getUserEmailPassword = async (email, password) => {
-	if (email == null || password == null) {
+	if (email == null) {
 		return {}
 	}
-	password = hashPassword(password)
 	let user
 	let errors
 	try {
 		user = await User.findOne({
 			where: {
 				email: email,
-				password: password,
 			},
 		})
+		const hashedPassword = user.dataValues.password
+		if (validatePassword(password, hashedPassword)) {
+			return user
+		}
 	} catch (err) {
 		errors.push(err.message)
 	}
 	return {
-		user: await JSON.stringify(user, null, 2),
+		user: user,
 		error: { errors },
 	}
 }
+
 module.exports = {
 	getAllUsers,
 	getUser,

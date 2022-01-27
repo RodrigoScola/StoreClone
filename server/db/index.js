@@ -1,5 +1,4 @@
 const { Sequelize } = require("sequelize")
-// const User = require("./models/User")
 
 const sequelize = new Sequelize("amazonStore", "postgres", "1212roro", {
 	host: "localhost",
@@ -11,9 +10,11 @@ const sequelize = new Sequelize("amazonStore", "postgres", "1212roro", {
 		updatedAt: "updatedat",
 	},
 })
+
 const sequelizeSetup = async () => {
 	try {
 		sequelize.authenticate()
+
 		console.log("connection with database successfull")
 	} catch (err) {
 		throw new Error("Cannot establish an connection with database")

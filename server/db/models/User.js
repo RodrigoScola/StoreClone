@@ -1,6 +1,7 @@
 const { sequelize } = require("../index")
 const { DataTypes } = require("sequelize")
 const { hashPassword } = require("../../utils/hashing")
+const { Product, createProduct } = require("./Product")
 
 const User = sequelize.define(
 	"User",
@@ -26,7 +27,7 @@ const User = sequelize.define(
 		email: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			// unique: true,
+			unique: true,
 		},
 		age: {
 			type: DataTypes.NUMBER,
@@ -51,6 +52,7 @@ const User = sequelize.define(
  */
 const createUser = async ({ firstName, lastName, password, email, age }) => {
 	let newUser
+
 	try {
 		newUser = await User.create(
 			{
@@ -62,17 +64,19 @@ const createUser = async ({ firstName, lastName, password, email, age }) => {
 			},
 			{ fields: ["firstName", "lastName", "password", "email", "age"] }
 		)
-		console.log(newUser)
 	} catch (err) {
 		// console.log(err)
 	}
 	return newUser
 }
 // createUser({
-// 	firstName: "asdfasd",
-// 	lastName: "asaasf",
-// 	password: "paspoddddfkapsd",
-// 	email: "emasdaosaafmisd",
-// 	age: 13,
-// }).then(res => console.log("user:", res))
+// 	firstName: "rodrigo",
+// 	lastName: "scola",
+// 	password: "1212roro",
+// 	email: "handomizando@gmail.com",
+// 	age: 12,
+// }).then(res => {
+// 	console.log(res)
+// })
+
 module.exports = { User, createUser }
