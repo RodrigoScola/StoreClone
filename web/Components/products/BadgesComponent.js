@@ -5,7 +5,6 @@ export const BadgesComponent = ({ badges }) => {
 			{!badges
 				? null
 				: badges.map(badge => {
-						console.log("badge", badge)
 						return (
 							<Badge bg="whatsapp.500" color="white.900" borderRadius="full">
 								{badge}

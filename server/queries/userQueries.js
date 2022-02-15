@@ -1,6 +1,7 @@
 const { User } = require("../db/models/User")
 const { validatePassword } = require("../utils/hashing")
-
+const { Product } = require("../db/models/Product")
+const { deleteProductByUserId } = require("./ProductQueries")
 /**
  * @description gets all users in database
  * @returns information about all users
@@ -23,12 +24,19 @@ const getUser = async uuid => {
 				id: uuid,
 			},
 		})
-		const userInfo = user
-		console.log(userInfo)
-		return userInfo
+		return user
 	} catch (err) {
 		console.log("")
 	}
+}
+
+const alterInfo = async ({ userId, newInfo }) => {
+	const updatedUser = await User.update(newInfo, {
+		where: {
+			id: userId,
+		},
+	})
+	return updatedUser == 1 ? true : false
 }
 
 /**
@@ -55,16 +63,26 @@ const getUserEmailPassword = async (email, password) => {
 			return user
 		}
 	} catch (err) {
-		errors.push(err.message)
+		// errors.push(err.message)
 	}
 	return {
 		user: user,
 		error: { errors },
 	}
 }
-
+const deleteUser = async id => {
+	const deletedUser = await User.destroy({
+		where: {
+			id,
+		},
+	})
+	deleteProductByUserId(id)
+	return deletedUser == 1 && deleteProductByUserId == true ? true : false
+}
 module.exports = {
 	getAllUsers,
 	getUser,
 	getUserEmailPassword,
+	alterInfo,
+	deleteUser,
 }

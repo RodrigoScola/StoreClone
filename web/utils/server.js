@@ -4,13 +4,17 @@ class Server {
 	constructor() {
 		this.baseLink = "http://localhost:4001"
 	}
-	async createUser({ firstName, lastName, password, email, age }) {
+	async createUser({ firstName, lastName, password, email, age, billingAdress, city, zipCode, country }) {
 		const user = await this.fetchData("user/create-user", {
-			firstName: firstName,
-			lastName: lastName,
-			password: password,
-			email: email,
-			age: age,
+			firstName,
+			lastName,
+			password,
+			email,
+			age,
+			country,
+			billingAdress,
+			city,
+			zipCode,
 		})
 		console.log(user)
 		return user
@@ -41,19 +45,30 @@ class Server {
 	}
 	uploadFile = async (file, userId, id) => {
 		const userFile = file.file
-		const productInfo = file.productInfo
+		if (!userFile) {
+			const imageRef = ref(firebaseStorage, `${userId}/profilePicture`)
+			const image = await uploadBytes(imageRef, file).then(snapshot => {
+				console.log(snapshot)
+			})
+			return image
+		}
 		const productsRef = ref(firebaseStorage, `${userId}/${id}/${userFile.name}`)
 		const image = await uploadBytes(productsRef, userFile).then(snapshot => {
 			console.log(snapshot)
 		})
-		console.log(image)
 		return image
 	}
-	async getFile(product) {
-		const productsRef = ref(firebaseStorage, `${product.userId}/${product.id}/${product.filename}`)
+	async getFile({ userId, id = null, filename = null }) {
+		if (!filename) {
+			const productsRef = ref(firebaseStorage, `${userId}/profilePicture`)
+			const file = await getDownloadURL(productsRef)
+			return file
+		}
+		const productsRef = ref(firebaseStorage, `${userId}/${id}/${filename}`)
 		const file = await getDownloadURL(productsRef)
 		return file
 	}
 }
 const server = new Server()
+server.getUserEmailPassword("handomizento@gmail.com", "1212roro")
 module.exports = server

@@ -1,24 +1,47 @@
 const server = require("../../utils/server")
-import { Avatar, Box, Wrap, WrapItem, Text, Divider } from "@chakra-ui/react"
+import { Avatar, Box, Wrap, WrapItem, Text, Divider, Flex, VStack, Stack, HStack, Button } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 import { ProductsComponent } from "../../Components/products/ProductsComponent"
-import { LogOut } from "../../Components/utils/Logging"
+import useUserInfo from "../../Components/utils/hooks/useUserInfo"
+import { DeleteAccount, LogOut } from "../../Components/utils/Logging"
 import NewProductComponent from "../../Components/utils/NewProductComponent"
+import { UpdateInfoComponent } from "../../Components/utils/updateInfo"
+import { WarnAlert } from "../../Components/utils/warning"
 import { user } from "../../utils/User"
 const string = require("lodash/string")
 const { getProduct } = require("../../utils/Product")
-export default function ProfilePage({ user, products }) {
-	console.log(user)
-	if (!user) return <>user not found</>
-	const name = `${string.capitalize(user.firstName)} ${string.capitalize(user.lastName)}`
-
+export default function ProfilePage({ userInfo, products, file }) {
+	if (!userInfo) return <>user not found</>
+	const name = `${string.capitalize(userInfo.firstName)} ${string.capitalize(userInfo.lastName)}`
+	let [userId, value] = useUserInfo()
+	console.log(value)
+	let component
+	if (value && userId == userInfo.id) {
+		component = (
+			<VStack alignItems="flex-start" spacing="5">
+				{value.verified ? (
+					<>
+						<NewProductComponent />
+						<UpdateInfoComponent />
+					</>
+				) : null}
+				<WarnAlert
+					BodyText="this action cannot be undone"
+					ButtonText="Delete Account"
+					HeaderText="Delete Account"
+					ConfirmButton="Delete"
+				/>
+				<LogOut />
+			</VStack>
+		)
+	}
 	return (
 		<Box m="15">
-			<Avatar size="2xl" />
+			{file ? <Avatar size="2xl" src={file} /> : null}
 			<Text>{name}</Text>
-			<Text>{user.email}</Text>
-			<NewProductComponent />
-			<br />
-			<LogOut />
+			<Text>{userInfo.email}</Text>
+			<Text>{userInfo.verified ? "verified account" : "account not verified yet"}</Text>
+			{component}
 			<Divider />
 			<ProductsComponent products={products} />
 		</Box>
@@ -26,14 +49,20 @@ export default function ProfilePage({ user, products }) {
 }
 export async function getStaticProps({ params }) {
 	const { id } = params
-	const { firstName, lastName, email } = await user.getUser(id)
+	const { firstName, lastName, email, verified } = await user.getUser(id)
 	let products = await getProduct()
+	const file = await server.getFile({
+		userId: id,
+	})
 	return {
 		props: {
-			user: {
+			file,
+			userInfo: {
 				firstName,
 				lastName,
 				email,
+				id,
+				verified,
 			},
 			products: products,
 		},

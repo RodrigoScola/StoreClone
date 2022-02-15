@@ -1,5 +1,6 @@
 import { Box, Button } from "@chakra-ui/react"
 import { useRouter } from "next/router"
+const { user } = require("../../utils/User")
 export default function NewProductComponent() {
 	const router = useRouter()
 	return (

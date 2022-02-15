@@ -1,22 +1,11 @@
-import {
-	Badge,
-	Box,
-	Flex,
-	HStack,
-	Input,
-	Spacer,
-	Textarea,
-	VStack,
-	Button,
-	Select,
-	SelectField,
-} from "@chakra-ui/react"
+import { Badge, Box, Flex, HStack, Input, Textarea, VStack, Button, Select } from "@chakra-ui/react"
 const server = require("../utils/server")
 import { useRouter } from "next/router"
-import { useState, useEffect, Component } from "react"
+import { categories, tags } from "../constants"
+import { useEffect, useState } from "react"
 import { User, user } from "../utils/User"
 const uploadFile = require("../utils/firebase")
-export default function NewProduct({}) {
+export default function NewProduct() {
 	const router = useRouter()
 	const [Medals, alterBadge] = useState([])
 	const [image, changeImage] = useState({})
@@ -24,20 +13,12 @@ export default function NewProduct({}) {
 		name: "",
 		description: "",
 		price: 0,
-		userId: "94de04bb-d106-4b25-9ccd-d0ae30a8b206",
+		userId: user.userId,
 		badges: [],
-		category: "Beleza",
+		category: "",
 		filename: "sdfgsdfgd",
+		quantity: 0,
 	})
-	useEffect(() => {
-		user.localStorageUserInfo().then(res => {
-			useData({
-				...data,
-				userId: res.userId.objValue,
-			})
-			console.log(data)
-		})
-	}, [router])
 	const changeValue = e => {
 		useData({ ...data, [e.target.name]: e.target.value })
 	}
@@ -45,22 +26,22 @@ export default function NewProduct({}) {
 		changeImage({ file: e.target.files[0] })
 		useData({ ...data, filename: e.target.files[0].name })
 	}
-	const categories = ["beleza", "informacao", "google"]
-	let tags = ["free", "new", "used", "free shipping", "discount", "limited supply"]
 	const SubmitForm = async e => {
 		e.preventDefault()
-		console.log()
 		useData({ ...data, badges: Medals, photos: image, filename: image.file.name })
-		console.log(data)
+		console.log(data.category)
 		await server.fetchData("products/create-product", data).then(res => {
 			changeImage({ ...image, productInfo: res })
-			server.uploadFile(image, "94de04bb-d106-4b25-9ccd-d0ae30a8b206", res.id).then(() => {
-				router.push(`/product/${res.id}`)
+			server.uploadFile(image, user.userId, res.id).then(() => {
+				// router.push(`/product/${res.id}`)
 			})
-			console.log(res, "this is the re")
 		})
 	}
-
+	useEffect(() => {
+		if (!user.userInfo.verified) {
+			router.push("/validate-account")
+		}
+	}, [])
 	return (
 		<Flex justifyContent="center">
 			<form onSubmit={e => SubmitForm(e)}>
@@ -75,6 +56,8 @@ export default function NewProduct({}) {
 					<label for="price">Price</label>
 					<Input onChange={changeValue} name="price" id="price" type="number" placeholder="a price" />
 					{/* photos */}
+					<label htmlFor="quantity">quantity</label>
+					<Input type="number" min={1} onChange={changeValue} max={9999} name="quantity" id="quantity" />
 					<label for="photos">Photos</label>
 					<Input
 						required
@@ -127,7 +110,13 @@ export default function NewProduct({}) {
 							)
 						})}
 					</HStack>
-					<Select placeholder="Category">
+					<Select
+						name="category"
+						onChange={e => {
+							useData({ ...data, category: e.target.value })
+						}}
+						placeholder="Category"
+					>
 						{categories.map(value => {
 							return <option>{value}</option>
 						})}
@@ -137,13 +126,4 @@ export default function NewProduct({}) {
 			</form>
 		</Flex>
 	)
-}
-export async function getStaticProps() {
-	const userInfo = await user.localStorageUserInfo()
-	console.log(userInfo)
-	return {
-		props: {
-			userInfp: "asdfsf",
-		},
-	}
 }

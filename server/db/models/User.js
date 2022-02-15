@@ -1,7 +1,6 @@
 const { sequelize } = require("../index")
 const { DataTypes } = require("sequelize")
 const { hashPassword } = require("../../utils/hashing")
-const { Product, createProduct } = require("./Product")
 
 const User = sequelize.define(
 	"User",
@@ -27,11 +26,31 @@ const User = sequelize.define(
 		email: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			unique: true,
+			// unique: true,
 		},
 		age: {
 			type: DataTypes.NUMBER,
 			allowNull: true,
+		},
+		city: {
+			type: DataTypes.STRING,
+		},
+		country: {
+			type: DataTypes.STRING,
+		},
+		zipCode: {
+			type: DataTypes.STRING,
+		},
+		billingAddress: {
+			type: DataTypes.STRING,
+		},
+		verified: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
+		},
+		code: {
+			type: DataTypes.INTEGER,
 		},
 	},
 	{
@@ -50,7 +69,7 @@ const User = sequelize.define(
  * @param {Int} Age - users age
  * @returns Instance of User
  */
-const createUser = async ({ firstName, lastName, password, email, age }) => {
+const createUser = async ({ city, billingAddress, country, zipCode, firstName, lastName, password, email, age }) => {
 	let newUser
 
 	try {
@@ -61,11 +80,30 @@ const createUser = async ({ firstName, lastName, password, email, age }) => {
 				password: await hashPassword(password),
 				email,
 				age,
+				city,
+				country,
+				zipCode,
+				billingAddress,
+				code: Math.round(Math.random() * (9999 - 1000)) + 1000, //generates an 4 digit int
 			},
-			{ fields: ["firstName", "lastName", "password", "email", "age"] }
+			{
+				fields: [
+					"firstName",
+					"lastName",
+					"password",
+					"email",
+					"age",
+					"city",
+					"country",
+					"zipCode",
+					"billingAdress",
+					"code",
+					"verified",
+				],
+			}
 		)
 	} catch (err) {
-		// console.log(err)
+		console.log(err)
 	}
 	return newUser
 }
@@ -73,10 +111,14 @@ const createUser = async ({ firstName, lastName, password, email, age }) => {
 // 	firstName: "rodrigo",
 // 	lastName: "scola",
 // 	password: "1212roro",
-// 	email: "handomizando@gmail.com",
+// 	email: "handomizento@gmail.com",
 // 	age: 12,
+// 	city: "caxiasDoSul",
+// 	country: "brazil",
+// 	zipCode: "129380192",
+// 	billingAddress: "aosidfu",
 // }).then(res => {
-// 	console.log(res)
+// 	console.log(res, "this sis a")
 // })
 
 module.exports = { User, createUser }

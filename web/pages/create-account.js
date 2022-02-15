@@ -1,15 +1,14 @@
 import { Box, Input, VStack, Button, Alert, AlertIcon } from "@chakra-ui/react"
 import { useState } from "react"
-const { user } = require("../utils/User")
-import { useRouter } from "next/router"
+const storage = require("../utils/Storage")
 const server = require("../utils/server")
 const string = require("lodash/string")
+import { useRouter } from "next/router"
+import { user } from "../utils/User"
+import { RenderForm } from "../Components/utils/RenderForm"
 export default function CreateAccount() {
 	const router = useRouter()
-	// add form validation
-	// if email exists in database, warn
-	// if passwords doenst match
-	// on submit call server.createUser(formInfo)
+
 	const [error, setError] = useState()
 	const [data, setData] = useState({
 		firstName: "",
@@ -24,18 +23,29 @@ export default function CreateAccount() {
 		zipCode: "",
 		billingAddress: "",
 	})
-	const Width = ["200px", "400px", "600px"]
+	const [image, setImage] = useState({})
+
 	const handleSubmit = e => {
 		e.preventDefault()
 		if (!passwordMatch()) return
 		server.createUser(data).then(res => {
-			console.log(res)
-			router.push("/")
+			// console.log(res.user.id)
+			storage.addCookie("userid", res.user.id)
+			server.uploadFile(image, res.user.id, "profilePicture").then(resolution => {
+				console.log(resolution)
+			})
+			user.login({ email: res.user.email, password: data.password }).then(
+				router.push(`/profile/${res.user.id}`)
+			)
+			// router.push(`/validate-account/${res.user.id}`)
 		})
+	}
+	const handleImage = e => {
+		setImage(e.target.files[0])
+		console.log(image)
 	}
 	const handleChange = e => {
 		setData({ ...data, [e.target.name]: e.target.value })
-		console.log(data.email)
 	}
 	const passwordMatch = () => {
 		if (data.password == data.confirmPassword) {
@@ -54,33 +64,8 @@ export default function CreateAccount() {
 							{error}
 						</Alert>
 					) : null}
-					{Object.keys(data).map(value => {
-						let obj = <Input name={value} onChange={handleChange} w={Width} required />
-						if (typeof data[value] !== "string") {
-							obj = (
-								<Input
-									name={value}
-									w={Width}
-									onChange={handleChange}
-									type={typeof data[value]}
-									min="13"
-									max="99"
-									required
-								/>
-							)
-						}
-						if (value == "email") {
-							obj = <Input w={Width} name={value} onChange={handleChange} type="email" required />
-						}
-						return (
-							<Box>
-								<VStack>
-									<label htmlFor={value}>{string.capitalize(string.lowerCase(value))}</label>
-									{obj}
-								</VStack>
-							</Box>
-						)
-					})}
+					{<RenderForm data={data} handleChange={handleChange} />}
+					<Input type="file" id="profilePic" onChange={e => handleImage(e)} required />
 					<br />
 					<Button m="9" type="submit" colorScheme="whatsapp">
 						Submit

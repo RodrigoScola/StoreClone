@@ -1,4 +1,3 @@
-import { ModalFocusScope } from "@chakra-ui/react"
 import Cookies from "universal-cookie"
 
 const cookie = new Cookies()
@@ -19,15 +18,16 @@ class Storage {
 		return setCookie
 	}
 	setLocalStorage(key, objValue) {
-		const stored = store.set(key, { objValue })
-
-		return stored.objValue
+		const stored = store.set(key, objValue)
+		return stored
 	}
 	getLocalStorage(key) {
-		return store.get(key)
+		const value = store.get(key)
+		return value
 	}
 	deleteKey(key) {
-		const deletedKey = store.remove(key)
+		const deletedKey = cookie.remove(key)
+		store.remove(key)
 		return deletedKey
 	}
 	log() {
@@ -36,5 +36,7 @@ class Storage {
 		})
 	}
 }
-
-module.exports = Storage
+const storage = new Storage()
+// storage.deleteKey("userInfo")
+storage.log()
+module.exports = storage

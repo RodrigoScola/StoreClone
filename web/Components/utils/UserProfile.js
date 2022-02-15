@@ -4,13 +4,14 @@ const { user } = require("../../utils/User")
 import { Login } from "./Logging"
 export const UserProfile = () => {
 	const color = useColorModeValue("gray.800", "gray.100")
+
 	const router = useRouter()
 	if (user.userId) {
 		return (
 			<Button
 				lineHeight="inherit"
 				onClick={() => {
-					router.push(`/profile/${user.userId.objValue}`)
+					router.push(`/profile/${user.userId}`)
 				}}
 				color={color}
 				variant="link"

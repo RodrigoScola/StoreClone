@@ -9,9 +9,10 @@ const { sequelizeSetup } = require("./db")
 const compression = require("compression")
 const userRouter = require("./Routers/UserRouter")
 const productRouter = require("./Routers/ProductRouter")
+const mailRouter = require("./Routers/mailRouter")
+require("dotenv").config()
 // const User = require("./db/models/User")
 
-require("dotenv").config()
 // add origin header(only when frontend posted)
 server.use(
 	cors({
@@ -31,13 +32,14 @@ server.use(
 		store: store,
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 24 * 3, // 3 days
-			secure: true,
+			secure: false,
 			sameSite: "none",
 		},
 	})
 )
 
 // routers
+server.use("/mail", mailRouter)
 server.use("/user", userRouter)
 server.use("/products", productRouter)
 // limits how much information is sent

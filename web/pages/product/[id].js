@@ -1,10 +1,16 @@
 const server = require("../../utils/server")
-import { Avatar, Box, Wrap, WrapItem, Text, Divider, Image } from "@chakra-ui/react"
+import { Avatar, Box, Wrap, WrapItem, Text, Divider, Image, Button } from "@chakra-ui/react"
 import { User } from "../../utils/User"
 import { ProductsComponent } from "../../Components/products/ProductsComponent"
+import useUserInfo from "../../Components/utils/hooks/useUserInfo"
+import { useEffect } from "react"
+import { DeleteProduct } from "../../Components/products/DeleteProduct"
 const string = require("lodash/string")
 const { getProducts, getFromId } = require("../../utils/Product")
 export default function ProfilePage({ product, file, userInfo, otherProducts }) {
+	console.log(userInfo)
+	let [id, { verified }] = useUserInfo()
+
 	if (!product) return <>product not found</>
 	return (
 		<>
@@ -16,6 +22,7 @@ export default function ProfilePage({ product, file, userInfo, otherProducts }) 
 			<Text>{product.description}</Text>
 			<Divider />
 			<Box>
+				{id == userInfo.id ? <DeleteProduct id={id} /> : null}
 				<Text>{`${string.capitalize(userInfo.firstName)} ${string.capitalize(userInfo.lastName)}`}</Text>
 				<Text>{userInfo.email}</Text>
 			</Box>

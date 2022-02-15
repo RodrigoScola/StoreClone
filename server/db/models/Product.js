@@ -30,7 +30,11 @@ const Product = sequelize.define(
 			type: DataTypes.ARRAY(DataTypes.STRING),
 		},
 		category: {
-			type: DataTypes.ARRAY(DataTypes.STRING),
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		quantity: {
+			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
 	},
@@ -42,7 +46,8 @@ const Product = sequelize.define(
 	}
 )
 
-const createProduct = async ({ filename, name, description, price, photos, userId, badges, category }) => {
+const createProduct = async ({ filename, name, description, price, photos, userId, badges, category, quantity }) => {
+	console.log(filename, name, description, price, photos, userId, badges, category)
 	let newUser
 	try {
 		newUser = await Product.create({
@@ -54,6 +59,7 @@ const createProduct = async ({ filename, name, description, price, photos, userI
 			badges,
 			category,
 			filename,
+			quantity,
 		})
 		console.log(newUser.dataValues)
 	} catch (err) {
@@ -61,14 +67,14 @@ const createProduct = async ({ filename, name, description, price, photos, userI
 	}
 	return newUser.dataValues
 }
-createProduct({
-	userId: "64051473-11d4-49ef-85ba-af10a7516b24",
-	description: "yeah i used to uses a shampoo tht made me go bald 4head",
-	price: 12,
-	name: "hellla cool",
-	photos: ["thing1", "thing2"],
-	badges: ["thing3", "thing4"],
-	category: ["a"],
-	filename: "aosdijfoijasidojf",
-})
+// createProduct({
+// 	userId: "64051473-11d4-49ef-85ba-af10a7516b24",
+// 	description: "yeah i used to uses a shampoo tht made me go bald 4head",
+// 	price: 12,
+// 	name: "hellla cool",
+// 	photos: ["thing1", "thing2"],
+// 	badges: ["thing3", "thing4"],
+// 	category: ["a"],
+// 	filename: "aosdijfoijasidojf",
+// })
 module.exports = { Product, createProduct }
