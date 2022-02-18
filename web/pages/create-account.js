@@ -26,6 +26,7 @@ export default function CreateAccount() {
 	const [image, setImage] = useState({})
 
 	const handleSubmit = e => {
+		console.log(data)
 		e.preventDefault()
 		if (!passwordMatch()) return
 		server.createUser(data).then(res => {
@@ -45,7 +46,8 @@ export default function CreateAccount() {
 		console.log(image)
 	}
 	const handleChange = e => {
-		setData({ ...data, [e.target.name]: e.target.value })
+		// setData({ ...data, [e.target.name]: e.target.value })
+		console.log(e)
 	}
 	const passwordMatch = () => {
 		if (data.password == data.confirmPassword) {
@@ -64,7 +66,7 @@ export default function CreateAccount() {
 							{error}
 						</Alert>
 					) : null}
-					{<RenderForm data={data} handleChange={handleChange} />}
+					{<RenderForm data={data} setData={setData} />}
 					<Input type="file" id="profilePic" onChange={e => handleImage(e)} required />
 					<br />
 					<Button m="9" type="submit" colorScheme="whatsapp">

@@ -14,8 +14,8 @@ import { useState, useRef } from "react"
 export const WarnAlert = ({
 	ButtonText,
 	CancelButton = "Cancel",
-	BodyText = "",
-	HeaderText,
+	BodyText = "Are you sure about that? this cannot be undone",
+	HeaderText = ButtonText,
 	ConfirmButton = "Submit",
 	children = "",
 	handleSubmit = null,

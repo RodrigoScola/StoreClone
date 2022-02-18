@@ -1,5 +1,6 @@
 const { sequelize } = require("../index")
 const { DataTypes } = require("sequelize")
+const stripeSDK = require("../../utils/stripe")
 const Product = sequelize.define(
 	"Product",
 	{
@@ -46,15 +47,26 @@ const Product = sequelize.define(
 	}
 )
 
-const createProduct = async ({ filename, name, description, price, photos, userId, badges, category, quantity }) => {
-	console.log(filename, name, description, price, photos, userId, badges, category)
+/**
+ *	creates the user in the databse and in stripe
+ * @param {string} filename - name of the image thats going to be saved in firebase
+ * @param {string} name - name of the product
+ * @param {string} description - description of the product
+ * @param {int} price - price of the product
+ * @param {UUID} userId - the id of the user
+ * @param {Array} badges - the badges of the product
+ * @param {string} category - the category of the product
+ * @param {int} quantity - number of items of the product
+ * @returns an object of user in sequelize
+ * @async
+ */
+const createProduct = async ({ filename, name, description, price, userId, badges, category, quantity }) => {
 	let newUser
 	try {
 		newUser = await Product.create({
 			name,
 			description,
 			price,
-			photos,
 			userId,
 			badges,
 			category,
@@ -67,14 +79,5 @@ const createProduct = async ({ filename, name, description, price, photos, userI
 	}
 	return newUser.dataValues
 }
-// createProduct({
-// 	userId: "64051473-11d4-49ef-85ba-af10a7516b24",
-// 	description: "yeah i used to uses a shampoo tht made me go bald 4head",
-// 	price: 12,
-// 	name: "hellla cool",
-// 	photos: ["thing1", "thing2"],
-// 	badges: ["thing3", "thing4"],
-// 	category: ["a"],
-// 	filename: "aosdijfoijasidojf",
-// })
+
 module.exports = { Product, createProduct }

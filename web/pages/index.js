@@ -13,6 +13,7 @@ export default function Home({ products, files }) {
 }
 export async function getStaticProps() {
 	const prod = await getProduct()
+
 	return {
 		props: {
 			products: prod,

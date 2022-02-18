@@ -1,5 +1,6 @@
 const firebaseStorage = require("../utils/firebase")
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage"
+import { user } from "./User"
 class Server {
 	constructor() {
 		this.baseLink = "http://localhost:4001"
@@ -16,7 +17,6 @@ class Server {
 			city,
 			zipCode,
 		})
-		console.log(user)
 		return user
 	}
 	async getUserEmailPassword(email, password) {
@@ -40,7 +40,6 @@ class Server {
 		} catch (err) {
 			console.log(err)
 		}
-
 		return data
 	}
 	uploadFile = async (file, userId, id) => {
@@ -53,9 +52,7 @@ class Server {
 			return image
 		}
 		const productsRef = ref(firebaseStorage, `${userId}/${id}/${userFile.name}`)
-		const image = await uploadBytes(productsRef, userFile).then(snapshot => {
-			console.log(snapshot)
-		})
+		const image = await uploadBytes(productsRef, userFile).then(snapshot => {})
 		return image
 	}
 	async getFile({ userId, id = null, filename = null }) {
@@ -67,6 +64,13 @@ class Server {
 		const productsRef = ref(firebaseStorage, `${userId}/${id}/${filename}`)
 		const file = await getDownloadURL(productsRef)
 		return file
+	}
+	async sendEmail(type, obj) {
+		const serverData = await this.fetchData(`mail/${type}`, obj)
+		if (serverData) {
+			console.log("email sent")
+			return true
+		}
 	}
 }
 const server = new Server()

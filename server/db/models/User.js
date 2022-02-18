@@ -61,12 +61,14 @@ const User = sequelize.define(
 	}
 )
 /**
-
+ * creates the user in the database
  * @param {String} firstName Users firstname
  * @param {string} lastName Users lastname
  * @param	{string} password - raw users password
  * @param {string} email - users email
  * @param {Int} Age - users age
+ * @param {string} city - users city
+ * @param {string} country - users country
  * @returns Instance of User
  */
 const createUser = async ({ city, billingAddress, country, zipCode, firstName, lastName, password, email, age }) => {

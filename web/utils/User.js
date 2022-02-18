@@ -1,6 +1,7 @@
 const server = require("./server")
 const storage = require("./Storage")
 const string = require("lodash/string")
+const { useRouter } = require("next/router")
 
 class User {
 	constructor() {
@@ -27,11 +28,17 @@ class User {
 		const userId = storage.getCookie("userid")
 		this.userInfo = storageValue
 		this.userId = userId
-
+		// console.log(this.userId)
 		return {
 			storageValue,
 			userId,
 		}
+	}
+	async deleteAccount() {
+		const id = storage.getCookie("userid")
+		const deletedUser = await server.fetchData("user/delete", { id })
+		user.logout()
+		window.location.assign("/")
 	}
 
 	async getUserInfo(id = this.userId) {
@@ -64,17 +71,17 @@ class User {
 		return updatedUser
 	}
 	async getUser(id = this.userId) {
-		const { firstName, lastName, email, verified } = await server.fetchData("user/get-user", {
+		let data = await server.fetchData("user/get-user", {
 			id,
 		})
-		console.log("this is the user", user)
+		this.userInfo = storage.setLocalStorage("userInfo", data)
+		if (!data) return null
 		return {
-			firstName,
-			id,
-			lastName,
-			email,
-			verified,
-			id,
+			firstName: data.firstName,
+			lastName: data.lastName,
+			verified: data.verified,
+			email: data.email,
+			userId: data.id,
 		}
 	}
 	async validateEmail(code = null) {
@@ -101,8 +108,7 @@ class User {
 
 const user = new User()
 // user.validateEmail()
-console.log(user)
-
+console.log(user.userId)
 // user.logout()
 // user.login({ email: "handomizento@gmail.com", password: "1212roro" })
 module.exports = { user, User }

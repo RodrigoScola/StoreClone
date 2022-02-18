@@ -33,7 +33,7 @@ export default function NewProduct() {
 		await server.fetchData("products/create-product", data).then(res => {
 			changeImage({ ...image, productInfo: res })
 			server.uploadFile(image, user.userId, res.id).then(() => {
-				// router.push(`/product/${res.id}`)
+				router.push(`/product/${res.id}`)
 			})
 		})
 	}

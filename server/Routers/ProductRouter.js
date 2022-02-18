@@ -6,15 +6,16 @@ const {
 	getProductFromUserId,
 	getProductsBySearch,
 	getProductByCategory,
+	deleteProduct,
 } = require("../queries/ProductQueries")
+const stripeSDK = require("../utils/stripe")
 
 const productRouter = express.Router()
 
 productRouter.use("/create-product", async (req, resoluton) => {
 	const { name, description, filename, price, userId, badges, category, quantity } = req.body
-	console.log(req.body, "this is the gouasdf")
 
-	const product = await createProduct({
+	await createProduct({
 		userId,
 		description,
 		price,
@@ -25,7 +26,9 @@ productRouter.use("/create-product", async (req, resoluton) => {
 		filename,
 		quantity,
 	}).then(res => {
-		console.log(typeof res)
+		const { price, id, name } = res
+		console.log(res)
+		stripeSDK.products.createProduct({ name, productId: id, unitAmount: price * 100 })
 		resoluton.send({ message: res })
 	})
 })
@@ -37,8 +40,15 @@ productRouter.use("/get-all", async (req, res) => {
 // getBy id
 productRouter.use("/id", async (req, res) => {
 	const { id } = req.body
+	const skd = await stripeSDK.products.getProduct(id)
+	console.log(skd, "the skd")
 	const product = await getProduct("id", id)
-	res.send({ message: product })
+	res.send({
+		message: {
+			product,
+			stripe: JSON.stringify(skd),
+		},
+	})
 })
 productRouter.post("/getFromId", async (req, res) => {
 	const { id, pId } = req.body
@@ -51,11 +61,23 @@ productRouter.post("/category/:query", async (req, res) => {
 	console.log(product)
 	res.send({ message: product })
 })
-productRouter.post("/:query", async (req, res) => {
-	const products = await getProductsBySearch(req.params.query)
-	res.send({ message: products })
-})
 productRouter.post("/test", (req, res) => {
 	res.send({ message: "asoidfjs" })
 })
+productRouter.post("/delete-product", async (req, res) => {
+	const { id, userId = null } = req.body
+	const deleted = await deleteProduct({ id, userId })
+	res.send({ message: deleted })
+})
+productRouter.post("/payment", async (req, res) => {
+	const { id } = req.body
+	const product = await stripeSDK.products.getProduct(id)
+	res.send({ message: product })
+})
+productRouter.post("/:query", async (req, res) => {
+	const products = await getProductsBySearch(req.params.query)
+
+	res.send({ message: products })
+})
+
 module.exports = productRouter

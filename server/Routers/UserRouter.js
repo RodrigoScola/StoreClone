@@ -15,10 +15,10 @@ userRouter.get("/", async (req, res) => {
 userRouter.use("/get-user", async (req, res) => {
 	const { id } = req.body
 	const userInfo = await getUser(id)
-	res.send({ message: userInfo })
+
+	res.send({ message: userInfo ? userInfo : null })
 })
 userRouter.post("/create-user", async (req, res) => {
-	// console.log(req.body)
 	const user = await createUser(req.body)
 	console.log(user)
 	res.send({
@@ -30,6 +30,7 @@ userRouter.post("/create-user", async (req, res) => {
 })
 userRouter.post("/validate", async (req, res) => {
 	const { id, code } = req.body
+	// sequelize returns in a json string, so it needs to be parsed multiple times
 	const user = await getUser(id)
 		.then(res => JSON.stringify(res, null, 2))
 		.then(res => JSON.parse(res))
@@ -38,13 +39,10 @@ userRouter.post("/validate", async (req, res) => {
 				code: res.code,
 			}
 		})
-	// console.log(code)
+
 	let error
 	if (!user) error = "user not found"
-	// if (user.code != code) return
-	// if not found user return
-	//if code doesnt match return error
-	// alter database
+
 	alterInfo({
 		userId: id,
 		newInfo: {
@@ -79,8 +77,9 @@ userRouter.post("/login", async (req, res) => {
 		})
 	}
 })
-userRouter.post("/deleteUser", (req, res) => {
+userRouter.post("/delete", (req, res) => {
 	const deletedUser = deleteUser(req.body.id)
+	res.send({ message: "hello ther" })
 })
 
 module.exports = userRouter

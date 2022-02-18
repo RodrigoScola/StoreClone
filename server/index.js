@@ -11,6 +11,7 @@ const userRouter = require("./Routers/UserRouter")
 const productRouter = require("./Routers/ProductRouter")
 const mailRouter = require("./Routers/mailRouter")
 require("dotenv").config()
+const stripe = require("stripe")(process.env.STRIPE_SECRET)
 // const User = require("./db/models/User")
 
 // add origin header(only when frontend posted)
@@ -53,3 +54,5 @@ server.listen(process.env.PORT, async () => {
 	sequelizeSetup()
 	console.log(`http://localhost:${process.env.PORT}/`)
 })
+
+//stripe stuff

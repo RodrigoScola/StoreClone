@@ -27,7 +27,7 @@ export const RenderForm = ({ data, setData }) => {
 				} else if (value == "password" || value == "confirmPassword") {
 					obj = <Input w={Width} name={value} onChange={handleChange} type="password" required />
 				}
-				if (value == "id" || value == "email") {
+				if (value == "id") {
 					obj = null
 				}
 				return (

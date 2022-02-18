@@ -31,5 +31,20 @@ mailRouter.use("/validate-email", async (req, res) => {
 	})
 	console.log(mail)
 })
+mailRouter.use("/purchase", async (req, res) => {
+	// console.log(req.body)
+	const { userInfo, product } = req.body
+	const { country, zipCode, city } = await getUser(userInfo.userId)
+	const { email, firstName, lastName } = await getUser(product.userId)
+
+	const mail = await sendMail({
+		subject: "SOMEONE BOUGHT YOR FING",
+		to: email,
+		text: `hello ${firstName} ${lastName}, the ${product.name} just sold! now please send the package to the address: 
+		to the country ${country}, in the city of ${city} in the zip code of ${zipCode}`,
+	}).then(() => {
+		res.send({ message: "email sent" }).status(200)
+	})
+})
 
 module.exports = mailRouter

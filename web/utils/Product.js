@@ -45,7 +45,9 @@ const getProductsBySearch = async query => {
 		files,
 	}
 }
-//add an getproduct by id
+export const deleteProduct = async ({ userId = null, id = null }) => {
+	const deleted = await server.fetchData("products/delete-product", { userId, id })
+}
 export const getFilesfromServer = async products => {
 	let files = products.map(async value => {
 		const file = await server.getFile(value)
@@ -57,6 +59,7 @@ export const getFilesfromServer = async products => {
 	})
 }
 module.exports = {
+	deleteProduct,
 	getProductsFromServer,
 	getProductsBySearch,
 	getProductsByCategory,

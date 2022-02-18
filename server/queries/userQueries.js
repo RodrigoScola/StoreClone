@@ -1,7 +1,7 @@
 const { User } = require("../db/models/User")
 const { validatePassword } = require("../utils/hashing")
 const { Product } = require("../db/models/Product")
-const { deleteProductByUserId } = require("./ProductQueries")
+const { deleteProductByUserId, deleteProduct } = require("./ProductQueries")
 /**
  * @description gets all users in database
  * @returns information about all users
@@ -24,7 +24,7 @@ const getUser = async uuid => {
 				id: uuid,
 			},
 		})
-		return user
+		return user.dataValues
 	} catch (err) {
 		console.log("")
 	}
@@ -38,7 +38,9 @@ const alterInfo = async ({ userId, newInfo }) => {
 	})
 	return updatedUser == 1 ? true : false
 }
-
+getUser("c3fd1f06-822e-4f78-b254-bee38f0f3fcf").then(res => {
+	console.log(res)
+})
 /**
  * @function
  * @async
@@ -70,13 +72,18 @@ const getUserEmailPassword = async (email, password) => {
 		error: { errors },
 	}
 }
+/**
+ * deletes the user and all the products that it had
+ * @param {uuid} usersId
+ * @returns {boolean}
+ */
 const deleteUser = async id => {
 	const deletedUser = await User.destroy({
 		where: {
 			id,
 		},
 	})
-	deleteProductByUserId(id)
+	deleteProduct({ userId: id })
 	return deletedUser == 1 && deleteProductByUserId == true ? true : false
 }
 module.exports = {

@@ -13,6 +13,14 @@ const transporter = nodemailer.createTransport({
 		rejectUnauthorized: false,
 	},
 })
+/**
+ *
+ * @param {string} email
+ * @param {subject} - what the email is about
+ * @param {JSX} - doesnt do that well tho
+ * @param {string} text
+ * @returns {object} mail object
+ */
 const sendMail = async ({ to, subject, html = null, text = null }) => {
 	const mailSent = await transporter.sendMail({
 		to,

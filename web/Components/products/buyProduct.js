@@ -4,7 +4,7 @@ import { Button } from "@chakra-ui/react"
 import Link from "next/link"
 import { Router, useRouter } from "next/router"
 
-export default function Test() {
+export const BuyProduct = ({ productId, product }) => {
 	useEffect(() => {
 		const query = new URLSearchParams(window.location.search)
 		if (query.get("success")) {
@@ -18,19 +18,17 @@ export default function Test() {
 
 	return (
 		<>
-			<form action="/api/checkout" method="POST">
-				<Link
-					href={{
-						pathname: "/api/checkout",
-						query: {
-							name: "aisd",
-						},
-					}}
-				>
-					asda
-				</Link>
-				<Button type="submit"></Button>
-			</form>
+			<Link
+				href={{
+					pathname: "/api/checkout",
+					query: {
+						productId,
+						product,
+					},
+				}}
+			>
+				<Button color="whatsapp.100">BuyProduct</Button>
+			</Link>
 		</>
 	)
 }
