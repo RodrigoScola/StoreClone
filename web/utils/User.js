@@ -28,7 +28,6 @@ class User {
 		const userId = storage.getCookie("userid")
 		this.userInfo = storageValue
 		this.userId = userId
-		// console.log(this.userId)
 		return {
 			storageValue,
 			userId,
@@ -93,7 +92,6 @@ class User {
 			}
 		}
 		const data = await server.fetchData("mail/validate-email", { id })
-		console.log(data)
 		return data
 	}
 	getFullName() {
@@ -107,8 +105,5 @@ class User {
 }
 
 const user = new User()
-// user.validateEmail()
-console.log(user.userId)
 // user.logout()
-// user.login({ email: "handomizento@gmail.com", password: "1212roro" })
 module.exports = { user, User }

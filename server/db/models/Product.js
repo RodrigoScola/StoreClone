@@ -1,6 +1,5 @@
 const { sequelize } = require("../index")
 const { DataTypes } = require("sequelize")
-const stripeSDK = require("../../utils/stripe")
 const Product = sequelize.define(
 	"Product",
 	{

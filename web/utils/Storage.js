@@ -37,5 +37,4 @@ class Storage {
 	}
 }
 const storage = new Storage()
-// storage.deleteKey("userInfo")
 module.exports = storage

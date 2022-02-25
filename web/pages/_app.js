@@ -1,7 +1,7 @@
-import { ChakraProvider, ColorModeProvider, ColorModeScript, extendTheme } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
 
 import { Nav } from "../Components/Navbar"
-import theme from "./theme"
+import theme from "../theme"
 
 function MyApp({ Component, pageProps }) {
 	return (

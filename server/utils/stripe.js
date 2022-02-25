@@ -1,8 +1,17 @@
 require("dotenv").config()
-const stripe = require("stripe")(process.env.STRIPE_SECRET)
+const stripe = require("stripe")(
+	"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"
+)
 const stripeSDK = {
 	products: {
+		/**
+		 * @param {string} name - name of the product
+		 * @param {uuid} productId
+		 * @param {unitAmount} price
+		 * @returns {object} the prices and product objects
+		 */
 		createProduct: async ({ name, productId, unitAmount }) => {
+			// product needs to be created before the price
 			const prod = await stripe.products.create({
 				name,
 				id: productId,
@@ -22,7 +31,6 @@ const stripeSDK = {
 			let { data } = await stripe.prices.list({
 				product: prodId,
 			})
-
 			return data[0]
 		},
 		updateProduct: async (prodId, newInfo = { price: null }) => {
@@ -31,6 +39,7 @@ const stripeSDK = {
 			})
 			if (newInfo.price) {
 				const updatedPrice = await stripe.prices.update()
+				return updatedPrice
 			}
 			return updatedProd
 		},

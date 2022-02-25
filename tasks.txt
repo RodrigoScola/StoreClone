@@ -3,9 +3,6 @@ good program stuff
      remove the firebase stuff and add an .env file 
      add comments to see what you did there
      add components to stuff to make it more modular 
-     remove imports that dont matter 
      add json and documentation
-     add what you have learned in the resumo proj
-     optimize so you dont have unnecessary calls or calls that are the same 
 other 
      publish database and site (change site on server side and server constructor) 

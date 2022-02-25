@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs")
 
 /**
- *
  * @param {string} password
  * @returns {string} hashed password
  */

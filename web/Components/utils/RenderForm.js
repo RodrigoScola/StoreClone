@@ -8,7 +8,7 @@ export const RenderForm = ({ data, setData }) => {
 	}
 	return (
 		<>
-			{Object.keys(data).map(value => {
+			{Object.keys(data).map((value, key) => {
 				let obj = <Input name={value} onChange={handleChange} w={Width} required />
 				if (typeof data[value] !== "string") {
 					obj = (
@@ -31,7 +31,7 @@ export const RenderForm = ({ data, setData }) => {
 					obj = null
 				}
 				return (
-					<Box>
+					<Box key={key}>
 						<VStack>
 							{obj == null ? null : (
 								<>

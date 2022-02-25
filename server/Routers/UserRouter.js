@@ -59,12 +59,9 @@ userRouter.post("/update-user", async (req, res) => {
 	res.send({ message: updatedUser })
 })
 userRouter.post("/login", async (req, res) => {
-	// console.log(req.body)
-
 	const { email = null, password = null, id = null } = req.body
 	if (id) {
 		const user = await getUser(id)
-
 		res.send({ message: JSON.parse(user) })
 	}
 	if (email && password) {

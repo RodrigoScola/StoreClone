@@ -12,43 +12,60 @@ const stripeSDK = require("../utils/stripe")
 
 const productRouter = express.Router()
 
-productRouter.use("/create-product", async (req, resoluton) => {
+productRouter.use("/create-product", async (req, res) => {
 	const { name, description, filename, price, userId, badges, category, quantity } = req.body
+	try {
+		const product = await createProduct({
+			userId,
+			description,
+			price,
+			name,
+			photos: ["thing1", "thing2"],
+			badges,
+			category,
+			filename,
+			quantity,
+		})
 
-	await createProduct({
-		userId,
-		description,
-		price,
-		name,
-		photos: ["thing1", "thing2"],
-		badges,
-		category,
-		filename,
-		quantity,
-	}).then(res => {
-		const { price, id, name } = res
-		console.log(res)
-		stripeSDK.products.createProduct({ name, productId: id, unitAmount: price * 100 })
-		resoluton.send({ message: res })
-	})
+		await stripeSDK.products.createProduct({
+			name: product.name,
+			productId: product.id,
+			unitAmount: product.price * 100,
+		})
+		res.send({ message: product })
+	} catch (err) {
+		res.send({ message: err })
+	}
 })
 productRouter.use("/get-all", async (req, res) => {
-	const products = await getAllProducts()
-	console.log(" this is the session", req.session.user)
-	res.send({ message: products })
+	try {
+		let products = await getAllProducts()
+		res.send({ message: products })
+	} catch (err) {
+		res.send({ message: null })
+	}
 })
 // getBy id
 productRouter.use("/id", async (req, res) => {
-	const { id } = req.body
-	const skd = await stripeSDK.products.getProduct(id)
-	console.log(skd, "the skd")
-	const product = await getProduct("id", id)
-	res.send({
-		message: {
-			product,
-			stripe: JSON.stringify(skd),
-		},
-	})
+	try {
+		const { id } = req.body
+		const skd = await stripeSDK.products.getProduct(id)
+		const product = await getProduct("id", id)
+		console.log(skd, product)
+		res.send({
+			message: {
+				product,
+				stripe: JSON.stringify(skd),
+			},
+		})
+	} catch (err) {
+		res.send({
+			message: {
+				product: null,
+				stripe: null,
+			},
+		})
+	}
 })
 productRouter.post("/getFromId", async (req, res) => {
 	const { id, pId } = req.body

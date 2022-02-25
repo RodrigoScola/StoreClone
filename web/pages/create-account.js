@@ -1,14 +1,13 @@
-import { Box, Input, VStack, Button, Alert, AlertIcon } from "@chakra-ui/react"
-import { useState } from "react"
+import { Input, VStack, Button, Alert, AlertIcon } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 const storage = require("../utils/Storage")
 const server = require("../utils/server")
-const string = require("lodash/string")
 import { useRouter } from "next/router"
 import { user } from "../utils/User"
 import { RenderForm } from "../Components/utils/RenderForm"
 export default function CreateAccount() {
 	const router = useRouter()
-
+	useEffect(() => {})
 	const [error, setError] = useState()
 	const [data, setData] = useState({
 		firstName: "",
@@ -23,31 +22,33 @@ export default function CreateAccount() {
 		zipCode: "",
 		billingAddress: "",
 	})
-	const [image, setImage] = useState({})
+	const [image, setImage] = useState()
 
 	const handleSubmit = e => {
 		console.log(data)
 		e.preventDefault()
 		if (!passwordMatch()) return
 		server.createUser(data).then(res => {
-			// console.log(res.user.id)
-			storage.addCookie("userid", res.user.id)
-			server.uploadFile(image, res.user.id, "profilePicture").then(resolution => {
-				console.log(resolution)
-			})
-			user.login({ email: res.user.email, password: data.password }).then(
-				router.push(`/profile/${res.user.id}`)
-			)
-			// router.push(`/validate-account/${res.user.id}`)
+			// storage.addCookie("userid", res.user.id)
+			console.log(res.user.id)
+			server
+				.uploadFile(image, res.user.id, "profilePicture")
+				.then(resolution => {
+					console.log(resolution)
+				})
+				.then(() => {
+					user.login({ email: res.user.email, password: data.password })
+
+					// router.push(`/profile/${res.user.id}`)
+				})
 		})
 	}
 	const handleImage = e => {
 		setImage(e.target.files[0])
-		console.log(image)
 	}
 	const handleChange = e => {
-		// setData({ ...data, [e.target.name]: e.target.value })
-		console.log(e)
+		setData({ ...data, [e.target.name]: e.target.value })
+		console.log(e.target.name)
 	}
 	const passwordMatch = () => {
 		if (data.password == data.confirmPassword) {

@@ -11,13 +11,11 @@ const userRouter = require("./Routers/UserRouter")
 const productRouter = require("./Routers/ProductRouter")
 const mailRouter = require("./Routers/mailRouter")
 require("dotenv").config()
-const stripe = require("stripe")(process.env.STRIPE_SECRET)
-// const User = require("./db/models/User")
 
 // add origin header(only when frontend posted)
 server.use(
 	cors({
-		// origin: process.env.__prod__ ? "https://www.example.com/" : "*", // if __prod__ is false, will only accept requests from this website
+		origin: "*", // if __prod__ is false, will only accept requests from this website
 	})
 )
 server.use(compression())
@@ -38,7 +36,6 @@ server.use(
 		},
 	})
 )
-
 // routers
 server.use("/mail", mailRouter)
 server.use("/user", userRouter)

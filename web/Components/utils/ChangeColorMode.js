@@ -1,6 +1,5 @@
 import { ImContrast, ImSun } from "react-icons/im"
-import { Box, IconButton, useColorMode, useColorModeValue, Button } from "@chakra-ui/react"
-import { IconComponent } from "../IconComponent"
+import { Box, IconButton, useColorMode } from "@chakra-ui/react"
 export const ChangeColorMode = ({ size, props }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
 	const ColorIcon = colorMode == "light" ? ImSun : ImContrast

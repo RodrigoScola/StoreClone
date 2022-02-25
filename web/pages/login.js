@@ -29,7 +29,7 @@ export default function Login({}) {
 						<Input onChange={handleChange} name="email" id="email" type="email" required />
 						<label htmlFor="password">password</label>
 						<Input onChange={handleChange} type="password" name="password" required />
-						<Link href="/create-account">
+						<Link passHref href="/create-account">
 							<ChakraLink color="dodgerblue">Create Account</ChakraLink>
 						</Link>
 						<Button mt="2" type="submit">

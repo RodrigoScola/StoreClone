@@ -1,9 +1,8 @@
 const store = require("../utils/Storage")
 import { useEffect, useState } from "react"
 import { Box, Button, Flex, Input, Text, VStack } from "@chakra-ui/react"
-import Link, { useRouter } from "next/router"
+import { useRouter } from "next/router"
 import { user } from "../utils/User"
-const storage = require("../utils/Storage")
 
 export default function ValidateAccount() {
 	const router = useRouter()
@@ -22,7 +21,7 @@ export default function ValidateAccount() {
 	useEffect(() => {
 		setUserInfo(user)
 		user.validateEmail()
-	}, [store])
+	}, [])
 	if (!userInfo) return <>h1</>
 	if (userInfo) {
 		return (

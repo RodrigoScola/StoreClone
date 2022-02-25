@@ -7,7 +7,7 @@ export function ProductsComponent({ products }) {
 	return (
 		<Flex justifyContent="center" flexWrap="wrap">
 			{products.prod.map((value, idx) => {
-				return <ProductComponent product={value} file={products.files[idx]} />
+				return <ProductComponent key={idx} product={value} file={products.files[idx]} />
 			})}
 		</Flex>
 	)

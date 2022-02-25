@@ -38,9 +38,6 @@ const alterInfo = async ({ userId, newInfo }) => {
 	})
 	return updatedUser == 1 ? true : false
 }
-getUser("c3fd1f06-822e-4f78-b254-bee38f0f3fcf").then(res => {
-	console.log(res)
-})
 /**
  * @function
  * @async

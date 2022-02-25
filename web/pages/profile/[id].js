@@ -1,10 +1,8 @@
 const server = require("../../utils/server")
-import { Avatar, Box, Wrap, WrapItem, Text, Divider, Flex, VStack, Stack, HStack, Button } from "@chakra-ui/react"
+import { Avatar, Box, Text, Divider, VStack } from "@chakra-ui/react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { ProductsComponent } from "../../Components/products/ProductsComponent"
 import useUserInfo from "../../Components/utils/hooks/useUserInfo"
-import { DeleteAccount, LogOut } from "../../Components/utils/Logging"
+import { LogOut } from "../../Components/utils/Logging"
 import NewProductComponent from "../../Components/utils/NewProductComponent"
 import { UpdateInfoComponent } from "../../Components/utils/updateInfo"
 import { WarnAlert } from "../../Components/utils/warning"
@@ -12,9 +10,9 @@ import { user } from "../../utils/User"
 const string = require("lodash/string")
 const { getProduct } = require("../../utils/Product")
 export default function ProfilePage({ userInfo, products, file }) {
+	let [userId, value] = useUserInfo()
 	if (!userInfo) return <>user not found</>
 	const name = `${string.capitalize(userInfo.firstName)} ${string.capitalize(userInfo.lastName)}`
-	let [userId, value] = useUserInfo()
 	let component
 	console.log(value)
 	if (value && userId == userInfo.userId) {
@@ -53,7 +51,7 @@ export default function ProfilePage({ userInfo, products, file }) {
 }
 export async function getStaticProps({ params }) {
 	const { id } = params
-	const userInfo = await user.getUser(id)
+	let userInfo = await user.getUser(id)
 
 	let products = await getProduct()
 	const file = await server.getFile({

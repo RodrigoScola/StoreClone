@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-export const StoreIcon = ({ props }) => {
+export const StoreIcon = () => {
 	const router = useRouter()
 	return (
 		<Box as="button">

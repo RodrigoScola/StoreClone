@@ -1,6 +1,6 @@
 import { ColorModeScript } from "@chakra-ui/react"
 import NextDocument, { Html, Head, Main, NextScript } from "next/document"
-import theme from "./theme"
+import theme from "../theme"
 require("dotenv").config()
 
 export default class Document extends NextDocument {
@@ -12,7 +12,6 @@ export default class Document extends NextDocument {
 					<script defer src="https://js.stripe.com/v3/"></script>
 				</Head>
 				<body>
-					{/* 👇 Here's the script */}
 					<ColorModeScript initialColorMode={theme.config.initialColorMode} />
 					<Main />
 					<NextScript />

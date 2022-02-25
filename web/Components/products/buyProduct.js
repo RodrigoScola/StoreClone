@@ -1,8 +1,7 @@
 import React, { useEffect } from "react"
-import { loadStripe } from "@stripe/stripe-js"
 import { Button } from "@chakra-ui/react"
 import Link from "next/link"
-import { Router, useRouter } from "next/router"
+import { useRouter } from "next/router"
 
 export const BuyProduct = ({ productId, product }) => {
 	useEffect(() => {
@@ -19,6 +18,7 @@ export const BuyProduct = ({ productId, product }) => {
 	return (
 		<>
 			<Link
+				passHref
 				href={{
 					pathname: "/api/checkout",
 					query: {

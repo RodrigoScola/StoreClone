@@ -1,9 +1,9 @@
 const firebaseStorage = require("../utils/firebase")
-import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage"
-import { user } from "./User"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 class Server {
 	constructor() {
 		this.baseLink = "http://localhost:4001"
+		// this.baseLink = "https://pacific-garden-66630.herokuapp.com"
 	}
 	async createUser({ firstName, lastName, password, email, age, billingAdress, city, zipCode, country }) {
 		const user = await this.fetchData("user/create-user", {
@@ -42,8 +42,9 @@ class Server {
 		}
 		return data
 	}
-	uploadFile = async (file, userId, id) => {
+	uploadFile = async (file, userId, id = null) => {
 		const userFile = file.file
+		console.log(userFile)
 		if (!userFile) {
 			const imageRef = ref(firebaseStorage, `${userId}/profilePicture`)
 			const image = await uploadBytes(imageRef, file).then(snapshot => {

@@ -7,7 +7,7 @@ import string from "lodash/string"
 const SearchBar = () => {
 	const [buttonClicked, clickButton] = useState(false)
 	const router = useRouter()
-	const [search, useSearch] = useState()
+	const [search, setSearch] = useState()
 	if (!buttonClicked) {
 		return (
 			<>
@@ -28,7 +28,7 @@ const SearchBar = () => {
 				<InputGroup>
 					<Input
 						onChange={e => {
-							useSearch(e.target.value)
+							setSearch(e.target.value)
 							console.log(e.target.value)
 						}}
 						placeholder={search}

@@ -1,5 +1,5 @@
 const server = require("../../utils/server")
-import { Avatar, Box, Wrap, WrapItem, Text, Divider, Image, Button } from "@chakra-ui/react"
+import { Box, Text, Divider, Image } from "@chakra-ui/react"
 import { User } from "../../utils/User"
 import { ProductsComponent } from "../../Components/products/ProductsComponent"
 import useUserInfo from "../../Components/utils/hooks/useUserInfo"
@@ -8,9 +8,9 @@ import { DeleteProduct } from "../../Components/products/DeleteProduct"
 import { BuyProduct } from "../../Components/products/buyProduct"
 import { useRouter } from "next/router"
 const string = require("lodash/string")
-const { getProducts, getFromId } = require("../../utils/Product")
+const { getFromId } = require("../../utils/Product")
 export default function ProfilePage({ product, file, userInfo, otherProducts, stripe }) {
-	let [id, { verified }] = useUserInfo()
+	let [id] = useUserInfo()
 	const router = useRouter()
 	useEffect(() => {
 		if (router.query.success) {
@@ -49,7 +49,9 @@ export default function ProfilePage({ product, file, userInfo, otherProducts, st
 }
 export async function getStaticProps({ params }) {
 	const { id } = params
-	let { product, stripe } = await server.fetchData("products/id", { id })
+	let { product, stripe } = await server.fetchData("products/id", { id }).then(res => {
+		return { product: res.product, stripe: res.stripe }
+	})
 	if (!product)
 		return {
 			props: {},
@@ -57,10 +59,8 @@ export async function getStaticProps({ params }) {
 	product = JSON.parse(product)
 	stripe = JSON.parse(stripe)
 	console.log(stripe)
-	// console.log(product)
 	const newUser = new User()
 	const file = await server.getFile(product)
-
 	const userInfo = await newUser.getUser(product.userId)
 	const otherProducts = await getFromId(product.userId, product.id)
 	return {
@@ -75,7 +75,7 @@ export async function getStaticProps({ params }) {
 }
 export async function getStaticPaths() {
 	return {
-		paths: [{ params: { id: "1" } }, { params: { id: "f146f5c0-77dd-11ec-826d-f35d0f072756" } }],
+		paths: [{ params: { id: "5d5f95ce-a97b-4d06-b7c3-d805851f35d2" } }],
 		fallback: true,
 	}
 }
