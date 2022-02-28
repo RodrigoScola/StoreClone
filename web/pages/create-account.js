@@ -29,7 +29,7 @@ export default function CreateAccount() {
 		e.preventDefault()
 		if (!passwordMatch()) return
 		server.createUser(data).then(res => {
-			// storage.addCookie("userid", res.user.id)
+			storage.addCookie("userid", res.user.id)
 			console.log(res.user.id)
 			server
 				.uploadFile(image, res.user.id, "profilePicture")
@@ -39,7 +39,7 @@ export default function CreateAccount() {
 				.then(() => {
 					user.login({ email: res.user.email, password: data.password })
 
-					// router.push(`/profile/${res.user.id}`)
+					router.push(`/profile/${res.user.id}`)
 				})
 		})
 	}

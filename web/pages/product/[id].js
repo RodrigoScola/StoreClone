@@ -3,7 +3,7 @@ import { Box, Text, Divider, Image } from "@chakra-ui/react"
 import { User } from "../../utils/User"
 import { ProductsComponent } from "../../Components/products/ProductsComponent"
 import useUserInfo from "../../Components/utils/hooks/useUserInfo"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { DeleteProduct } from "../../Components/products/DeleteProduct"
 import { BuyProduct } from "../../Components/products/buyProduct"
 import { useRouter } from "next/router"
@@ -11,6 +11,7 @@ const string = require("lodash/string")
 const { getFromId } = require("../../utils/Product")
 export default function ProfilePage({ product, file, userInfo, otherProducts, stripe }) {
 	let [id] = useUserInfo()
+
 	const router = useRouter()
 	useEffect(() => {
 		if (router.query.success) {
@@ -49,19 +50,17 @@ export default function ProfilePage({ product, file, userInfo, otherProducts, st
 }
 export async function getStaticProps({ params }) {
 	const { id } = params
-	let { product, stripe } = await server.fetchData("products/id", { id }).then(res => {
+	let { product, stripe: stripe } = await server.fetchData("products/id", { id }).then(res => {
 		return { product: res.product, stripe: res.stripe }
 	})
-	if (!product)
-		return {
-			props: {},
-		}
+
 	product = JSON.parse(product)
 	stripe = JSON.parse(stripe)
-	console.log(stripe)
 	const newUser = new User()
 	const file = await server.getFile(product)
+	console.log(product)
 	const userInfo = await newUser.getUser(product.userId)
+	console.log(userInfo)
 	const otherProducts = await getFromId(product.userId, product.id)
 	return {
 		props: {

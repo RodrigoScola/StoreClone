@@ -1,8 +1,9 @@
+console.log(process.env.STRIPE_SECRET)
 const stripe = require("stripe")(
-	// this is a public key
-	"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"
+	// this only happens server side so its okay to be on a string
+	"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"
 )
-
+console.log(process.env.STRIPE_SECRET)
 export default async function handler(req, res) {
 	try {
 		console.log(req.query.id)
@@ -14,11 +15,11 @@ export default async function handler(req, res) {
 				},
 			],
 			mode: "payment",
-			success_url: `http://localhost:3000/product/${req.query.product}/?success=true`,
-			cancel_url: `http://localhost:3000/?canceled=true`,
+			success_url: `https://web-rodrigoscola.vercel.app/product/${req.query.product}/?success=true`,
+			cancel_url: `https://web-rodrigoscola.vercel.app/?canceled=true`,
 		})
+		console.log(session)
 		res.redirect(303, session.url)
-		res.send(req.query)
 	} catch (err) {
 		res.status(err.statusCode || 500).json(err.message)
 	}
