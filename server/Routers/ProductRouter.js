@@ -51,7 +51,6 @@ productRouter.use("/id", async (req, res) => {
 		const { id } = req.body
 		const skd = await stripeSDK.products.getProduct(id)
 		const product = await getProduct("id", id)
-		console.log(skd, product)
 		res.send({
 			message: {
 				product,

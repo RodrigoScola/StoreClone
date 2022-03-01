@@ -25,9 +25,7 @@ const getUser = async uuid => {
 			},
 		})
 		return user.dataValues
-	} catch (err) {
-		console.log("")
-	}
+	} catch (err) {}
 }
 
 const alterInfo = async ({ userId, newInfo }) => {

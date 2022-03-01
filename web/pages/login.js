@@ -19,8 +19,7 @@ export default function Login({}) {
 					onSubmit={async e => {
 						e.preventDefault()
 						user.login(userData).then(() => {
-							console.log(userData)
-							// router.push("/")
+							router.push("/")
 						})
 					}}
 				>

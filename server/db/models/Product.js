@@ -72,7 +72,6 @@ const createProduct = async ({ filename, name, description, price, userId, badge
 			filename,
 			quantity,
 		})
-		console.log(newUser.dataValues)
 	} catch (err) {
 		// console.log(err)
 	}

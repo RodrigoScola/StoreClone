@@ -29,7 +29,6 @@ mailRouter.use("/validate-email", async (req, res) => {
           <h3>${user.code}</h3>
           </div>`,
 	})
-	console.log(mail)
 })
 mailRouter.use("/purchase", async (req, res) => {
 	// console.log(req.body)

@@ -44,12 +44,9 @@ class Server {
 	}
 	uploadFile = async (file, userId, id = null) => {
 		const userFile = file.file
-		console.log(userFile)
 		if (!userFile) {
 			const imageRef = ref(firebaseStorage, `${userId}/profilePicture`)
-			const image = await uploadBytes(imageRef, file).then(snapshot => {
-				console.log(snapshot)
-			})
+			const image = await uploadBytes(imageRef, file).then(snapshot => {})
 			return image
 		}
 		const productsRef = ref(firebaseStorage, `${userId}/${id}/${userFile.name}`)
@@ -69,7 +66,6 @@ class Server {
 	async sendEmail(type, obj) {
 		const serverData = await this.fetchData(`mail/${type}`, obj)
 		if (serverData) {
-			console.log("email sent")
 			return true
 		}
 	}

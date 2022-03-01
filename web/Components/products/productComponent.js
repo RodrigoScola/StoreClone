@@ -25,7 +25,7 @@ export const ProductComponent = ({ product, file }) => {
 		>
 			<Box w={[175, 200, 200]}>
 				<Image src={file} pb="2" alt={product.name} />
-				<BadgesComponent badges={product.badges} />
+				<BadgesComponent max={2} badges={product.badges} />
 				{/* get a better font */}
 				<Box fontWeight="semibold" letterSpacing="wide" textTransform="capitalize">
 					<HStack spacing="auto">

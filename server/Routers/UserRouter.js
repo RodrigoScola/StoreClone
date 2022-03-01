@@ -20,7 +20,6 @@ userRouter.use("/get-user", async (req, res) => {
 })
 userRouter.post("/create-user", async (req, res) => {
 	const user = await createUser(req.body)
-	console.log(user)
 	res.send({
 		message: {
 			user: user,

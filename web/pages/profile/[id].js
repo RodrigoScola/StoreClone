@@ -10,24 +10,15 @@ import { WarnAlert } from "../../Components/utils/warning"
 import { user } from "../../utils/User"
 const string = require("lodash/string")
 const { getProduct } = require("../../utils/Product")
-export default function ProfilePage({ id }) {
+export default function ProfilePage({ file, products, userInfo, id }) {
 	let [userId, value] = useUserInfo()
-	const [data, setData] = useState({})
+	const [data, setData] = useState({
+		file,
+		products,
+		userInfo,
+		id,
+	})
 
-	useEffect(async () => {
-		if (id) {
-			let userInfo = await user.getUser(id)
-			let products = await getProduct()
-			const file = await server.getFile({
-				userId: id,
-			})
-			setData({
-				userInfo,
-				products,
-				file,
-			})
-		}
-	}, [id])
 	if (!data.userInfo) return <>user not found</>
 	const name = `${string.capitalize(data.userInfo.firstName)} ${string.capitalize(data.userInfo.lastName)}`
 	let component
@@ -67,15 +58,23 @@ export default function ProfilePage({ id }) {
 }
 export async function getStaticProps({ params }) {
 	const { id } = params
+	let userInfo = await user.getUser(id)
+	let products = await getProduct()
+	const file = await server.getFile({
+		userId: id,
+	})
 	return {
 		props: {
 			id,
+			file,
+			products,
+			userInfo,
 		},
 	}
 }
 export async function getStaticPaths() {
 	return {
-		paths: [{ params: { id: "0d3684bf-aeb9-4b41-a95b-3b783a56ed4a" } }],
+		paths: [{ params: { id: "d4d074f9-389b-4929-a8a9-8958c7c9060f" } }],
 		fallback: true,
 	}
 }

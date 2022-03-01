@@ -99,9 +99,6 @@ export default function NewProduct() {
 									onClick={() => {
 										if (Medals.indexOf(value) == -1) {
 											alterBadge([...Medals, value])
-											tags.filter(item => {
-												return item !== value
-											})
 										}
 									}}
 									name={value}
